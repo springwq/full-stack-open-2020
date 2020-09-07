@@ -3,6 +3,7 @@ import axios from 'axios';
 import Filter from './Filter';
 import PersonForm from './PersonForm'
 import Persons from './Persons'
+import Notification from './Notification'
 import personService from '../services/persons'
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterValue, setFilterValue ] = useState('')
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
   const hook = () => {
     axios
@@ -76,6 +78,14 @@ const App = () => {
           .update(id, newPersionObject)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+
+            setErrorMessage(
+              `Updateed ${newName}`
+            )
+
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
           })
         
       } else { 
@@ -94,13 +104,21 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+
+        setErrorMessage(
+          `Added ${newName}`
+        )
+
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
   }
 
   return (
     <div>
-      <h2>Phonebook</h2>
-
+      <h1>Phonebook</h1>
+      <Notification message={errorMessage} />
       <Filter value={filterValue} onChange={handleSearch} />
 
       <h3>add a new</h3>
